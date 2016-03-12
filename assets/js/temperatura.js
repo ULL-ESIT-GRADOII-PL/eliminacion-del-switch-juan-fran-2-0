@@ -15,6 +15,7 @@
         result = this.getValue();
       return result;
     };
+
     this.toFahrenheit = function() {
       var result;
       var tipo = this.getTipo().toLowerCase();
@@ -26,6 +27,7 @@
         result = this.getValue();
       return result;
     };
+
     this.toKelvin = function() {
       var result;
       var tipo = this.getTipo().toLowerCase();

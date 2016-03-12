@@ -1,75 +1,77 @@
-(function(exports) {
-  "use strict";
+(function (exports){
+"use strict"
+  function Medida(valor, tipo) {
+    console.log("V: " + valor);
+    console.log("t: " + tipo);
+    //En caso de que solo se llame con 1 parametro, asignar un valor a tipo;
+    if(!tipo){
+      console.log("not tipo");
+    var expr = XRegExp(""
+                          + "(<val>  [+-]? \\s* \\d+ )" //Numero
+                          + "(<exp> ([\\., \\d+]? [e[+-]? \\d+]?)? \\s*)"  //Exponente
+                          + "(<tipo> [a-zA-Z]+)" //tipo a convertir
+                          );
+      var p = XRegExp.exec(valor, expr);
 
-  function Medida(valor,tipo)
-  {
-    var value = valor;
-    var tipo = tipo;
-
-    this.getValue = function() {
-      return value;
-    };
-    this.getTipo = function() {
-      return tipo;
+      this.valor = parseFloat(p.val) * Math.pow(10, parseInt(p.exp));
+      this.tipo  = p.tipo;
     }
+    else{
+      console.log("Valor: " + valor);
+      console.log("tipo: " + tipo);
+      this.valor = valor;
+      this.tipo = tipo;
+    }
+
+
   }
 
-  exports.convertir = function() {
-   var valor = document.getElementById('convert').value,
-     elemento = document.getElementById('converted'),
-     tipos_aceptados = ["c", "f", "k"],
-     regexp = XRegExp(
-       '(?<numero>    [+-]?\\d+(\\.\\d+)?([e][+-]?\\d+)?[ ]*)\
-        (?<tipo>      [a-z]+)[ ]+(?:to[ ]+)?\
-        (?<tipo2> [a-z]+)[ ]*$', 'xi'),
-     valor = XRegExp.exec(valor, regexp);
+  //Exprreg constante
+  Medida.match = function (input) {
+        var medidas = "[a-z]+";
+        var in_expr = XRegExp(""
+                              + "(<val> \\s* [+-]? \\s* \\d+ )" //Numero
+                              + "(<decimales> ()[\\.,] \\d+ \\s*)? )"
+                              + "(<exp> ([e[+-]? \\d+]?)? \\s*)"
+                              + "(<de>" + medidas + ")" //Tipo de medida recibida
+                              + "(<to> (to)? \\s* )"
+                              + "(<dest>" + medidas + ")" //tipo de medida de destino
+                              + "(\\s*)$"
+                              , "xi");
+        return XRegExp.exec(input, in_expr);
+  };
 
-   if (valor) {
-     var numero = valor.numero.replace(/\s+/g, ''),
-       tipo = valor.tipo.toLowerCase(),
-       tipo2 = valor.tipo2.toLowerCase();
+  //Inicializar array vacio
+  Medida.medida = {};
 
-     if (tipos_aceptados.indexOf(tipo) > -1 && tipos_aceptados.indexOf(tipo2) > -1) {
-       elemento.style.color = "rgb(17, 5, 169)";
-       console.log("Valor: " + numero + ", Tipo: " + tipo + ", Nuevo: " + tipo2);
-       numero = parseFloat(numero);
-       var inicial;
-       switch (tipo) {
-         case 'c':
-           inicial = new Celsius(numero);
-           break;
-         case 'f':
-           inicial = new Fahrenheit(numero);
-           break;
-         case 'k':
-           inicial = new Kelvin(numero);
-           break;
-         default:
-           console.log("No hay asignado un case para este valor");
-           break;
-       }
+  Medida.convertir = function(valor) {
+    console.log("Convertir: " + valor)
+      var measures = Medida.medidas;
 
-       switch (tipo2) {
-         case 'c':
-           elemento.innerHTML = inicial.toCelsius().toFixed(2) + " Celsius";
-           break;
-         case 'f':
-           elemento.innerHTML = inicial.toFahrenheit().toFixed(2) + " Fahrenheit";
-           break;
-         case 'k':
-           elemento.innerHTML = inicial.toKelvin().toFixed(2) + " Kelvin";
-           break;
-         default:
-           console.log("No hay asignado un case para este valor");
-           break;
-       }
-     } else {
-       elemento.style.color = "rgb(138, 0, 0)";
-       elemento.innerHTML = "ERROR. Introduzca por ejemplo -32.5e10f to K";
-     }
-   } else {
-     elemento.style.color = "rgb(138, 0, 0)";
-     elemento.innerHTML = "ERROR. Introduzca por ejemplo -32.5e10f to K";
-   }
- }
+      measures.c = Celsius(valor);
+      measures.f = Fahrenheit(valor);
+      measures.k = Kelvin(valor);
+
+      var match = Medida.match(valor);
+
+      if (match) {
+          var numero = match.value,
+              tipo   =  match.tipo,
+              destino = match.destino;
+          try {
+              var source = new measures[tipo[0].toLowerCase()](numero);
+              var target = "to" + measures[destino[0].toLowerCase()].name; // "toCelsius"
+
+              return source[target]().toFixed(2) + " " + target; // "0 Celsius"
+          }
+          catch(err) {
+              return 'Desconozco como convertir desde "' + tipo + '" hasta "' + destino + '"';
+          }
+      }
+      else
+          return "Introduzca una temperatura valida: 34.58e-4 F to K";
+  };
+
+  exports.Medida = Medida;
+
 })(this);
