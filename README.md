@@ -5,11 +5,11 @@ Este repositorio aloja la práctica de conversión de tipos, aplicando Strategy 
 
 **Repositorio GitHuB**
 
-* [Repositorio](https://github.com/alu0100502923/object-oriented-programming-in-js-juan-fran/)
+* [Repositorio](https://github.com/ULL-ESIT-GRADOII-PL/eliminacion-del-switch-juan-fran-2-0/)
 
 **Página de la práctica**
 
-* [Web](http://alu0100502923.github.io/object-oriented-programming-in-js-juan-fran/)
+* [Web](https://ull-esit-gradoii-pl.github.io/eliminacion-del-switch-juan-fran-2-0/)
 
 **Página del autor**
 
