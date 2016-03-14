@@ -1,6 +1,6 @@
 # Práctica OOP en JS
 
-Este repositorio aloja la práctica de conversión de tipos, realizada con html, css y javascript, usando POO y haciendo uso de la herencia en javascript.
+Este repositorio aloja la práctica de conversión de tipos, aplicando Strategy Design Patterns
 
 
 **Repositorio GitHuB**

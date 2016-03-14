@@ -1,75 +1,95 @@
 (function (exports){
 "use strict"
+
   function Medida(valor, tipo) {
-    console.log("V: " + valor);
-    console.log("t: " + tipo);
-    //En caso de que solo se llame con 1 parametro, asignar un valor a tipo;
-    if(!tipo){
-      console.log("not tipo");
-    var expr = XRegExp(""
-                          + "(<val>  [+-]? \\s* \\d+ )" //Numero
-                          + "(<exp> ([\\., \\d+]? [e[+-]? \\d+]?)? \\s*)"  //Exponente
-                          + "(<tipo> [a-zA-Z]+)" //tipo a convertir
-                          );
+
+    if(tipo == undefined){
+      var expr = XRegExp(""
+                        + "(?<valor> \\s* [+-]? \\d+ ([,\\.]\\d+)?)"
+                        + "(?<exponente> (e [+-]? \\d+)? )"
+                        + "(?<unidad> \\s* [a-z]+ \\s*)"
+                        , "xi");
+
       var p = XRegExp.exec(valor, expr);
 
-      this.valor = parseFloat(p.val) * Math.pow(10, parseInt(p.exp));
-      this.tipo  = p.tipo;
+      var exp;
+      if (p.exponente.length == 1){
+        exp = 1;
+      }
+      else{
+        exp = Math.pow(10, parseFloat(p.exponente.substring(1,p.exponente.length).trim()));
+      }
+
+      this.valor = parseFloat(p.valor.trim()) * exp;
+      this.tipo  = p.unidad.trim().toLowerCase();
     }
     else{
-      console.log("Valor: " + valor);
-      console.log("tipo: " + tipo);
       this.valor = valor;
       this.tipo = tipo;
     }
-
-
   }
 
-  //Exprreg constante
-  Medida.match = function (input) {
-        var medidas = "[a-z]+";
-        var in_expr = XRegExp(""
-                              + "(<val> \\s* [+-]? \\s* \\d+ )" //Numero
-                              + "(<decimales> ()[\\.,] \\d+ \\s*)? )"
-                              + "(<exp> ([e[+-]? \\d+]?)? \\s*)"
-                              + "(<de>" + medidas + ")" //Tipo de medida recibida
-                              + "(<to> (to)? \\s* )"
-                              + "(<dest>" + medidas + ")" //tipo de medida de destino
-                              + "(\\s*)$"
-                              , "xi");
-        return XRegExp.exec(input, in_expr);
+  Medida.match = function (valor) {
+        var unidades = "[a-z]+";
+        var expr = XRegExp(""
+                          + "(?<valor> \\s* [+-]? \\d+ ([,\\.]\\d+)?)"
+                          + "(?<exponente> (e [+-]? \\d+)? )"
+                          + "(?<unidad> \\s* " + unidades + " \\s*)"
+                          + "(?<to> (to)? \\s*)"
+                          + "(?<destino> " + unidades + ")"
+                          + "(\\s*)$"
+                          , "xi");
+
+        var res = XRegExp.exec(valor, expr)
+
+        var exp;
+        if (res.exponente.length <= 1){
+          exp = 1;
+        }
+        else{
+          exp = Math.pow(10, parseFloat(res.exponente.substring(1,res.exponente.length).trim()));
+        }
+
+        var n = parseFloat(res.valor.trim()) * exp;
+
+
+
+        var arr = [n, res.unidad.toLowerCase().trim(), res.destino.toLowerCase().trim()];
+
+        return arr;
   };
 
-  //Inicializar array vacio
-  Medida.medida = {};
+  Medida.medidas = {};
 
   Medida.convertir = function(valor) {
-    console.log("Convertir: " + valor)
+
       var measures = Medida.medidas;
 
-      measures.c = Celsius(valor);
-      measures.f = Fahrenheit(valor);
-      measures.k = Kelvin(valor);
+      measures.c = Celsius;
+      measures.f = Fahrenheit;
+      measures.k = Kelvin;
 
       var match = Medida.match(valor);
 
-      if (match) {
-          var numero = match.value,
-              tipo   =  match.tipo,
-              destino = match.destino;
-          try {
-              var source = new measures[tipo[0].toLowerCase()](numero);
-              var target = "to" + measures[destino[0].toLowerCase()].name; // "toCelsius"
+      var n = match[0],
+          t = match[1],
+          d = match[2];
 
-              return source[target]().toFixed(2) + " " + target; // "0 Celsius"
-          }
-          catch(err) {
-              return 'Desconozco como convertir desde "' + tipo + '" hasta "' + destino + '"';
-          }
+      console.log("n: " + n);
+      console.log("t: " + t);
+      console.log("d: " + d);
+
+      try {
+        var source = new measures[t](n); //new Celsius new Kelvin
+        var target = "to" + measures[d].name; // "toCelsius"
+        console.log("src: " + source);
+        console.log("Target" + target);
+        return source[target]().toFixed(2) + " " + target; // "0 Celsius"
       }
-      else
-          return "Introduzca una temperatura valida: 34.58e-4 F to K";
+      catch(err) {
+        return "Error";
+      }
+
   };
 
   exports.Medida = Medida;
