@@ -19,15 +19,15 @@
     }
 
     Celsius.prototype.toCelsius = function(){
-      return this.valor;
+      return new Celsius(this.valor);
     }
 
     Celsius.prototype.toFahrenheit = function () {
-      return (this.valor * 9/5) + 32;
+      return new Fahrenheit((this.valor * 9/5) + 32);
     }
 
     Celsius.prototype.toKelvin = function () {
-      return (this.valor + 273.15);
+      return new Kelvin(this.valor + 273.15);
     }
 
     ///// Fahrenheit
@@ -40,16 +40,16 @@
     }
 
     Fahrenheit.prototype.toFahrenheit = function(){
-      return this.valor;
+      return new Fahrenheit(this.valor);
     }
 
     Fahrenheit.prototype.toCelsius = function () {
 
-      return ((this.valor - 32) * 5/9);
+      return new Celsius((this.valor - 32) * 5/9);
     }
 
     Fahrenheit.prototype.toKelvin = function () {
-      return ((this.valor - 32) / (9/5)) + 273.15;
+      return new Kelvin(((this.valor - 32) / (9/5)) + 273.15);
     }
 
 
@@ -63,15 +63,15 @@
     }
 
     Kelvin.prototype.toKelvin = function(){
-      return this.valor;
+      return new Kelvin(this.valor);
     }
 
     Kelvin.prototype.toCelsius = function () {
-      return (this.valor - 273.15);
+      return new Celsius(this.valor - 273.15);
     }
 
     Kelvin.prototype.toFahrenheit = function () {
-      return (((this.valor - 273.15) * 9/5) + 32);
+      return new Fahrenheit(((this.valor - 273.15) * 9/5) + 32);
     }
 
 
