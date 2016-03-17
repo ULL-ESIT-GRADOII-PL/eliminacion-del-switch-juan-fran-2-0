@@ -11,6 +11,9 @@ Este repositorio aloja la práctica de conversión de tipos, aplicando Strategy 
 
 * [Web](https://ull-esit-gradoii-pl.github.io/eliminacion-del-switch-juan-fran-2-0/)
 
+**Pruebas unitarias*
+* [Test](https://ull-esit-gradoii-pl.github.io/eliminacion-del-switch-juan-fran-2-0/test.html)
+
 **Página del autor**
 
 * [Juan Oliva](https://alu0100502923.github.io/)
