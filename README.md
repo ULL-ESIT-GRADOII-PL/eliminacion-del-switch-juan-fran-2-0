@@ -1,6 +1,6 @@
-# Práctica OOP en JS
+# Práctica 05 **Mocha y Chai**
 
-Este repositorio aloja la práctica de conversión de tipos, aplicando Strategy Design Patterns
+Este repositorio aloja la práctica de conversión de tipos de temperatura, aplicando Strategy Design Patterns, utilizando code coverage y test unitarios con Mocha y Chai.
 
 
 **Repositorio GitHuB**
